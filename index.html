@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .container {
+        width: 200px;
+        height: 400px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 1px solid;
+        border-radius: 10px;
+        position: relative;
+      }
+
+      .clock {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        border: 1px solid;
+        border-radius: 50%;
+      }
+
+      #secondHand,
+      #minuteHand,
+      #hourHand {
+        position: absolute;
+        left: 50%;
+        width: 1px;
+        background-color: black;
+      }
+
+      #secondHand {
+        top: 5%;
+        height: 90px;
+        transform-origin: bottom;
+      }
+
+      #minuteHand {
+        top: 10%;
+        height: 80px;
+        transform: rotate(-5deg);
+        transform-origin: bottom;
+      }
+
+      #hourHand {
+        top: 20%;
+        height: 60px;
+        transform: rotate(75deg);
+        transform-origin: bottom;
+      }
+
+      .clockTime {
+        font-size: 20px;
+        position: absolute;
+        top: 40%;
+        width: 120px;
+        height: 20px;
+        padding: 20px;
+        text-align: center;
+        border: 1px solid;
+        border-radius: 40px;
+        visibility: hidden;
+      }
+
+      button {
+        font-size: 15px;
+        position: absolute;
+        bottom: 5%;
+        cursor: pointer;
+        width: 90px;
+        height: 40px;
+        padding: 10px;
+        border: 1px solid;
+        border-radius: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1 id="heading">Analog Clock</h1>
+      <div class="clock" id="clock">
+        <div id="secondHand"></div>
+        <div id="minuteHand"></div>
+        <div id="hourHand"></div>
+      </div>
+      <p class="clockTime" id="clockTime"></p>
+      <button>Convert</button>
+    </div>
+  </body>
+  <script>
+    const timer = () => {
+      setInterval(() => {
+        const time = new Date();
+
+        const prePreHour = time.getHours();
+        const preHour = prePreHour > 12 ? prePreHour - 12 : prePreHour;
+        const preMinute = time.getMinutes();
+        const preSecond = time.getSeconds();
+
+        const addZero = (time) => {
+          return time < 10 ? `0${time}` : time;
+        };
+
+        const hour = addZero(preHour);
+        const minute = addZero(preMinute);
+        const second = addZero(preSecond);
+
+        const ampm = prePreHour >= 12 ? "PM" : "AM";
+        const heading = document.getElementById("heading");
+
+        const clock = document.getElementById("clock");
+        const secondHand = document.getElementById("secondHand");
+        const minuteHand = document.getElementById("minuteHand");
+        const hourHand = document.getElementById("hourHand");
+
+        secondHand.style.transform = `rotate(${second * 6}deg)`;
+        minuteHand.style.transform = `rotate(${minute * 6}deg)`;
+        hourHand.style.transform = `rotate(${hour * 30}deg)`;
+
+        const clockTime = document.getElementById("clockTime");
+        clockTime.innerHTML = `${hour}:${minute}:${second} ${ampm}`;
+
+        const button = document.querySelector("button");
+        button.addEventListener("click", () => {
+          if (clockTime.style.visibility == "hidden") {
+            clockTime.style.visibility = "visible";
+            clock.style.visibility = "hidden";
+            heading.innerText = "Digital Clock";
+          } else {
+            clockTime.style.visibility = "hidden";
+            clock.style.visibility = "visible";
+            heading.innerText = "Analog Clock";
+          }
+        });
+      }, 1000);
+    };
+    timer();
+  </script>
+</html>
